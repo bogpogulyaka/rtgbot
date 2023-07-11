@@ -62,8 +62,8 @@ class Window(Component):
     def __init__(self,
                  route: str = None,
                  parse_mode: ParseMode = ParseMode.HTML,
-                 disable_web_page_preview: bool = False,
-                 enable_notification=False,
+                 disable_web_page_preview: bool = None,
+                 enable_notification: bool = None,
                  **kwargs):
         super().__init__(**kwargs)
 
@@ -88,29 +88,34 @@ class WindowsGroup(ComponentTreeNode):
     @register_props
     def __init__(self,
                  route: str = None,
+                 disable_web_page_preview: bool = None,
                  enable_notification: bool = None,
                  **kwargs):
         super().__init__(**kwargs)
 
     def render_messages(self) -> DOM:
-        def render_recursive(node: ComponentTreeNode):
+        def collect_recursive(node: ComponentTreeNode, enable_notification: bool = None, disable_web_page_preview: bool = None):
             messages = []
-            enable_notification = None
 
-            if isinstance(node, WindowsGroup):
-                enable_notification = node.props.enable_notification
+            if isinstance(node, Window | WindowsGroup):
+                if node.props.enable_notification is not None:
+                    enable_notification = node.props.enable_notification
+                if node.props.disable_web_page_preview is not None:
+                    disable_web_page_preview = node.props.disable_web_page_preview
 
             for child in node.rendered_children.values():
                 if not isinstance(child, Window):
-                    messages.extend(render_recursive(child))
+                    messages.extend(collect_recursive(child, enable_notification, disable_web_page_preview))
                 else:
                     message = child.render_message()
-                    # override enable notification
+                    # override properties
                     if enable_notification is not None:
                         message.enable_notification = enable_notification
+                    if disable_web_page_preview is not None:
+                        message.disable_web_page_preview = disable_web_page_preview
 
                     messages.append(message)
 
             return messages
 
-        return render_recursive(self)
+        return collect_recursive(self)

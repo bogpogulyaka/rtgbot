@@ -6,7 +6,7 @@ import aiogram
 
 from rtgbot.base import ComponentTreeNode
 from rtgbot.components.navigation_stack import NavigationStack
-from rtgbot.etities.context import RenderContext
+from rtgbot.etities.dom import RenderContext
 from rtgbot.etities.event import Event
 from rtgbot.etities.user_info import UserInfo
 from rtgbot.event_processor import EventProcessor

@@ -1,8 +1,4 @@
-import typing as tp
-
-from rtgbot.base import ComponentTreeNode
 from rtgbot.components.base import Component
-from rtgbot.components.widgets import Const, BadComponent, ExceptionComponent
 from rtgbot.decorators import register_props
 from rtgbot.utils import expand_component_call_tree
 

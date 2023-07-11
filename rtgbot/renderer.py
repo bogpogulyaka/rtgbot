@@ -6,8 +6,7 @@ import typing as tp
 import rtgbot.components.widgets
 from rtgbot.base import ComponentTreeNode
 from rtgbot.components.base import WindowsGroup
-from rtgbot.etities.context import RenderContext
-from rtgbot.etities.dom import DOMMessageUpdate, DOM
+from rtgbot.etities.dom import DOMMessageUpdate, RenderContext, DOM
 
 
 class Renderer:

@@ -5,7 +5,7 @@ from abc import ABC
 from dataclasses import dataclass, field
 
 import rtgbot
-from rtgbot.etities.context import RenderContext
+from rtgbot.etities.dom import RenderContext
 from rtgbot.props_dict import PropsDict
 from rtgbot.decorators import register_props
 from rtgbot.reactivity_manager import ReactivityManager
