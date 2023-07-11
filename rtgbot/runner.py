@@ -56,6 +56,9 @@ class Runner:
 
             user = message.from_user
             session, created = await self._get_user_session(UserInfo(user.id, user))
+            if await self._check_user_banned(session):
+                return
+
             session.navigator.reset()
             if not created:
                 await session.schedule_screen_reset()
@@ -67,7 +70,11 @@ class Runner:
                 return
 
             user = message.from_user
-            (await self._get_user_session(UserInfo(user.id, user)))[0].root.invalidate()
+            session, _ = await self._get_user_session(UserInfo(user.id, user))
+            if await self._check_user_banned(session):
+                return
+
+            session.root.invalidate()
             await self._try_delete_message(message)
 
         @self.bot_router.message(Command(commands=["back"]))
@@ -76,7 +83,11 @@ class Runner:
                 return
 
             user = message.from_user
-            (await self._get_user_session(UserInfo(user.id, user)))[0].navigator.back()
+            session, _ = await self._get_user_session(UserInfo(user.id, user))
+            if await self._check_user_banned(session):
+                return
+
+            session.navigator.back()
             await self._try_delete_message(message)
 
         @self.bot_router.message()
@@ -87,7 +98,11 @@ class Runner:
             await asyncio.sleep(0.5)
 
             user = message.from_user
-            (await self._get_user_session(UserInfo(user.id, user)))[0].event_processor.push_message_input(message)
+            session, _ = await self._get_user_session(UserInfo(user.id, user))
+            if await self._check_user_banned(session):
+                return
+
+            session.event_processor.push_message_input(message)
             await self._try_delete_message(message)
 
         @self.bot_router.callback_query()
@@ -96,6 +111,9 @@ class Runner:
             session, created = await self._get_user_session(UserInfo(user.id, user), start_immediately=False)
             if created:
                 await session.start(display=False)
+
+            if await self._check_user_banned(session):
+                return
 
             if not session.event_processor.push_button_click(callback_query.data):
                 for handler in self.callback_query_handlers:
@@ -153,3 +171,14 @@ class Runner:
 
     def _check_chat_private(self, message: Message):
         return message.chat.type == "private"
+
+    async def _check_user_banned(self, session: UserSession):
+        if session.context.is_banned:
+            session.navigator.reset()
+            await session.stop()
+            self.user_sessions.pop(session.context.user_id)
+            if self.on_user_session_stopped:
+                await self.on_user_session_stopped(session.user_info)
+
+            return True
+        return False

@@ -11,3 +11,4 @@ class RenderContext:
     navigator: tp.Any
     event_manager: tp.Any
     render_cycle_id: int = 0
+    is_banned: bool = False
