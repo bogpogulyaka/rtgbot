@@ -11,6 +11,7 @@ from aiogram.types import BotCommand, Message, CallbackQuery, User
 
 from rtgbot.components.base import Window, WindowsGroup
 from rtgbot.etities.user_info import UserInfo
+from rtgbot.message_info_storage.memory_message_info_storage import MemoryTgMessageInfoStorage
 from rtgbot.message_info_storage.message_info_storage import TgMessageInfoStorage
 from rtgbot.message_sender import MessageSender
 from rtgbot.user_session import UserSession
@@ -18,7 +19,7 @@ from rtgbot.user_session import UserSession
 
 class Runner:
     def __init__(self, start_screen: Window | WindowsGroup, bot_token: str,
-                 message_info_storage: TgMessageInfoStorage,
+                 message_info_storage: TgMessageInfoStorage = MemoryTgMessageInfoStorage(),
                  callback_query_handlers: tp.List[tp.Callable] = [],
                  render_context_provider: tp.Callable[[UserInfo], tp.Coroutine] = None,
                  on_user_session_started: tp.Callable[[UserInfo], tp.Coroutine] = None,
