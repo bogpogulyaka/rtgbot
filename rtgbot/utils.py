@@ -14,6 +14,10 @@ def unpack_kbd_buttons(kbd: rtgbot.components.base.KeyboardData) -> tp.List[rtgb
 
 
 def expand_component_tree(children):
+    if not isinstance(children, tp.Iterable):
+        yield children
+        return
+
     for child in children:
         if isinstance(child, tp.Callable):
             yield child
@@ -41,7 +45,10 @@ def expand_component_call_tree(children, display_exceptions):
                     if display_exceptions:
                         yield rtgbot.components.widgets.ExceptionComponent(e)
             else:
-                yield rtgbot.components.conditional.BadComponent(type(child))
+                yield rtgbot.components.widgets.BadComponent(type(child))
+
+    if not isinstance(children, tp.Iterable):
+        return children
 
     return expand(children)
 

@@ -5,6 +5,7 @@ import typing as tp
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
+import aiogram
 from aiogram import types
 from aiogram.enums import ContentType, InputMediaType
 
