@@ -11,7 +11,9 @@ from rtgbot.components.layout import Row, Group
 
 class Paginator(Component):
     @register_props
-    def __init__(self, count: int, visible_count=5, page: int = None, on_page_changed=None, max_rows=1, **kwargs):
+    def __init__(self, count: int, visible_count=5, page: int = None,
+                 on_page_changed=None, max_rows=1, loop=False,
+                 **kwargs):
         super().__init__(**kwargs)
 
     async def setup(self):
@@ -53,8 +55,8 @@ class Paginator(Component):
             else:
                 displayed_indices = [1] + list(range(page - (visible_count - 2) // 2, page + (visible_count - 3) // 2 + 1)) + [count]
 
-        btn_prev = Button(on_click=self.prev)(page > 1 and 'ᐊ' or '|')
-        btn_next = Button(on_click=self.next)(page < count and 'ᐅ' or '|')
+        btn_prev = Button(on_click=self.prev)(page > 1 and 'ᐊ' or (self.props.loop and 'ᐊᐊ' or '|'))
+        btn_next = Button(on_click=self.next)(page < count and 'ᐅ' or (self.props.loop and 'ᐅᐅ' or '|'))
         btn_pages = For(items=displayed_indices)(
             lambda page_id, _: Button(on_click=self.select_page(page_id))(fpage(page_id))
         ),
@@ -79,14 +81,14 @@ class Paginator(Component):
         )
 
     async def prev(self, e):
-        if self.page > 1:
-            self.page -= 1
+        if self.page > 1 or self.props.loop:
+            self.page = (self.page - 2) % self.props.count + 1
             if self.props.on_page_changed:
                 await self.props.on_page_changed(self.page)
 
     async def next(self, e):
-        if self.page < self.props.count:
-            self.page += 1
+        if self.page < self.props.count or self.props.loop:
+            self.page = self.page % self.props.count + 1
             if self.props.on_page_changed:
                 await self.props.on_page_changed(self.page)
 
