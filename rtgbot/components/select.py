@@ -41,11 +41,10 @@ class Select(Component):
             except:
                 component = self.item_getter(item, self.value == item)
 
-            if isinstance(component, str) or isinstance(component, Const):
+            if isinstance(component, str | Const):
                 return Button(on_click=self._on_select(item, i))(component)
             else:
-                component = Component()(tuple(expand_component_tree(component)))
-                return component
+                return Component()(tuple(expand_component_tree(component)))
 
         width = self.props.width
         max_width = self.props.max_width
