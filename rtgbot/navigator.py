@@ -41,6 +41,8 @@ class Navigator:
             self._stack.append((screen, [state]))
             self._navigation_stack.invalidate()
         else:
+            if replace:
+                self._stack[-1][1].pop()
             self._stack[-1][1].append(state)
 
     def back(self, to: str = None, state=None):
