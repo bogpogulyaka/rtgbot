@@ -1,7 +1,7 @@
 from rtgbot.components.base import Component
 from rtgbot.decorators import register_props
 from rtgbot.components.for_each import For
-from rtgbot.components.widgets import Button, Const
+from rtgbot.components.widgets import Button, Text
 from rtgbot.components.layout import Group
 from rtgbot.utils import expand_component_tree
 
@@ -41,7 +41,7 @@ class Select(Component):
             except:
                 component = self.item_getter(item, self.value == item)
 
-            if isinstance(component, str | Const):
+            if isinstance(component, str | Text):
                 return Button(on_click=self._on_select(item, i))(component)
             else:
                 return Component()(tuple(expand_component_tree(component)))

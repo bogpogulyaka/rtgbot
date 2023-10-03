@@ -1,6 +1,6 @@
 from rtgbot.components.base import Component
 from rtgbot.decorators import register_props
-from rtgbot.components.widgets import Button, Const
+from rtgbot.components.widgets import Button, Text
 from rtgbot.utils import expand_component_tree
 
 
@@ -34,7 +34,7 @@ class Checkbox(Component):
         except:
             component = self.item_getter(self.checked)
 
-        if isinstance(component, str | Const):
+        if isinstance(component, str | Text):
             return Button(on_click=self._on_click)(component)
         else:
             return Component()(tuple(expand_component_tree(component)))
