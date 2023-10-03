@@ -9,7 +9,7 @@ from rtgbot.etities.event import ButtonClickEvent, MessageInputEvent
 from rtgbot.utils import Symbols
 
 
-class Const(Component):
+class Text(Component):
     @register_props
     def __init__(self, text='', end='\n', trim_spaces=False, **kwargs):
         super().__init__(**kwargs)

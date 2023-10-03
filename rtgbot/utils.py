@@ -22,7 +22,7 @@ def expand_component_tree(children):
         if isinstance(child, tp.Callable):
             yield child
         elif isinstance(child, str):
-            yield rtgbot.components.widgets.Const(child)
+            yield rtgbot.components.widgets.Text(child)
         elif isinstance(child, tp.Tuple):
             yield from expand_component_tree(child)
         else:
@@ -35,7 +35,7 @@ def expand_component_call_tree(children, display_exceptions):
             if isinstance(child, rtgbot.base.ComponentTreeNode):
                 yield child
             elif isinstance(child, str):
-                yield rtgbot.components.widgets.Const(child)
+                yield rtgbot.components.widgets.Text(child)
             elif isinstance(child, tp.Tuple):
                 yield from expand(child)
             elif isinstance(child, tp.Callable):
