@@ -12,8 +12,8 @@ class Select(Component):
                  options,
                  value=None,
                  on_select=None,
-                 unselect=False,
-                 same_select=False,
+                 enumerate=False,
+                 unselect=False, same_select=False,
                  width=None, max_width=None, fill_tail=True,
                  **kwargs):
         super().__init__(**kwargs)
@@ -36,13 +36,17 @@ class Select(Component):
 
     async def render(self):
         def get_item_component(item, i):
+            value = item
+            if self.props.enumerate:
+                item = (i, item)
+
             try:
-                component = self.item_getter(item, self.value == item, self._on_select(item, i))
+                component = self.item_getter(item, self.value == value, self._on_select(value, i))
             except:
-                component = self.item_getter(item, self.value == item)
+                component = self.item_getter(item, self.value == value)
 
             if isinstance(component, str | Text):
-                return Button(on_click=self._on_select(item, i))(component)
+                return Button(on_click=self._on_select(value, i))(component)
             else:
                 return Component()(tuple(expand_component_tree(component)))
 

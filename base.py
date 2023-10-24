@@ -53,7 +53,6 @@ class ComponentTreeNode(ABC):
                        'activated', 'deactivated', 'updated', 'before_unmount', 'unmounted', 'on_event'}
 
     @register_props
-    # id: str = None,
     def __init__(self, key=None, when=True, visible=True, style: dict = None):
         self._render_data = RenderData()
         self._reactivity_manager = ReactivityManager(self)
